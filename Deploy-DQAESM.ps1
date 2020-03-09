@@ -38,6 +38,9 @@ $ScheduledESMTaskDescription = "DQA Email Signature Manager (App & Configuration
 $ScheduledESMSignatureTaskName = "DQAESM-Signature-Updater"
 $ScheduledESMSignatureTaskDescription = "DQA Email Signature Manager (Signature Block Template Management)"
 
+#Scheduler Interval (minutes)
+$ScheduledInterval = 300
+
 #Installation Path
 $destinationFolder = "$env:userprofile\AppData\Roaming\DQAESM"
 
@@ -112,12 +115,12 @@ try {
     Write-Output "Installing DQA Email Signature Updater Scheduled Tasks."
     $scriptpath = "$destinationFolder\Update-DQAESM.ps1"
     $scriptWorkingDir = "$destinationFolder"
-    $trigger = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Minutes 60) -once -At (Get-Date) -RandomDelay (New-TimeSpan -Minutes 2)
+    $trigger = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Minutes $ScheduledInterval) -once -At (Get-Date) -RandomDelay (New-TimeSpan -Minutes 2)
     $action = New-ScheduledTaskAction -Execute 'Powershell.exe' -WorkingDirectory $scriptWorkingDir -Argument "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass `"$scriptpath`""
     $settings = New-ScheduledTaskSettingsSet -RunOnlyIfNetworkAvailable -AllowStartIfOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 10) -Hidden -Compatibility Win8
     $null = Register-ScheduledTask -taskname $ScheduledESMTaskName -Action $action -Settings $settings -Trigger $trigger -Description $ScheduledESMTaskDescription
     $scriptpath = "$destinationFolder\Sync-DQAESMSignature.ps1"
-    $action = New-ScheduledTaskAction -Execute 'Powershell.exe' -WorkingDirectory $scriptWorkingDir -Argument "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass `"$scriptpath`""
+    $action = New-ScheduledTaskAction -Execute 'Powershell.exe' -WorkingDirectory $scriptWorkingDir -Argument "-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass `"$scriptpath`""
     $null = Register-ScheduledTask -taskname $ScheduledESMSignatureTaskName -Action $action -Settings $settings -Trigger $trigger -Description $ScheduledESMSignatureTaskDescription
 
 }
