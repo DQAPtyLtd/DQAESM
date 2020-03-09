@@ -266,11 +266,12 @@ If ($CheckMD5 -eq $false) {
    ###Collect and store local Template pack MD5 hash variable
    $localTemplatePackMD5Hash = Get-Content -Raw -Path $localTemplatePackMD5
    ###Collect and store remote Template pack MD5 hash variable
+   $remoteTemplatePackMD5Hash = $null
    $remoteTemplatePackMD5Hash = Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageMD5URL
 
    ###Compare Hash Values if different overwrite local MD5 and Template Pack ZIP file otherwise do nothing
    $remoteTemplatePackMD5Hash = [string]$remoteTemplatePackMD5Hash
-         If ($localTemplatePackMD5Hash -ne $remoteTemplatePackMD5Hash)
+         If ($localTemplatePackMD5Hash -ne $remoteTemplatePackMD5Hash -and $remoteTemplatePackMD5Hash -ne "")
             {
                Write-Output "Downloading Latest ESM Template Package and MD5 Hash"
                #Download Latest Template Package MD5 and ZIP files
@@ -305,10 +306,17 @@ Set-Content -Path $ESMUserProfilePath -Value $convertUserProfiletoJSON
 $compareLocalProfile = $esMuserprofile | convertto-json -Compress -Depth 50
 $compareCloudProfile = $profile | convertto-json -Compress -Depth 50
 
-### If Array objects do not match then the Cloud based user attributes have changed and the email signature will be redeployed
-if ($compareLocalProfile -ne $compareCloudProfile) {
+IF([string]::IsNullOrWhiteSpace($compareCloudProfile)) {
+   Write-Output "Cloud User Profile unavailable for comparison"
+} else
+   {
 
-   $UpdateESMTemplate = $true
+   ### If Array objects do not match then the Cloud based user attributes have changed and the email signature will be redeployed
+   if ($compareLocalProfile -ne $compareCloudProfile) {
+
+      $UpdateESMTemplate = $true
+
+   }
 
 }
 

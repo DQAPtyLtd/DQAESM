@@ -4,10 +4,8 @@ DQA Email Signature Manager
 A solution designed to centrally deploy client-side Outlook Email Signatures and
 update the signature block dynamically from Azure Active Directory attributes.
 
-Solution files and Purpose
+Solution Files and Purpose
 --------------------------
-
-PowerShell
 
 -   **Generate-DQAESMConfig.ps1** – Generates DQAESM.config in JSON format used
     in client script package to provide client-side configuration
@@ -27,11 +25,74 @@ PowerShell
     updates to the users email signature block
 
 -   **Deploy-DQAESM.ps1** – PowerShell script designed to be deployed via Intune
-    that installs the DQA ESM solution (designed to be in the end-users context
+    that installs the DQA ESM solution (designed to be in the end-user’s context
     not as system)
+
+-   **DQAESM.config** – Client-Side master configuration file
+
+-   **DQAESM-OutlookConfiguredSignatures.config** – Client-Side configuration
+    file to track and compare the esm configured default email signatures in
+    outlook (dynamically generated)
+
+-   **DQAESM-UserProfile.config** – Client-Side configuration file to track and
+    compare collected Azure AD user profile information against previously
+    configured user profile information (dynamically generated)
+
+-   **DQAESM.zip** – Script and Configuration Client Deployment Package (Name
+    configurable via DQAESM.config)
+
+    -   Contains: Update-DQAESM.ps1, Sync-DQAESMSignature.ps1 and DQAESM.config
+
+-   **DQAESM.md5** – file that contains MD5 hash signature for DQAESM.zip it is
+    used to compare with locally cached md5 file on the client computer if
+    different the zip file is downloaded and scripts and configuration are
+    updated on the client PC
+
+-   **DQAESMSignatures.zip** – Signature Block Templates Client Deployment
+    Package (Name configurable via DQAESM.config)
+
+-   **DQAESMSignatures.md5** – file that contains MD5 hash signature for
+    DQAESMSignatures.zip it is used to compare with locally cached md5 file on
+    the client computer if different the zip file is downloaded and the email
+    templates are updated on the client PC
+
+Solution Folders and Purpose
+----------------------------
+
+### Solution Side
+
+-   **Root Folder** – Holds all executable scripts and configuration files
+
+-   **/Templates** – Location to place Email Signature Templates for client
+    packaging
+
+-   **/Packages** – Location that Client Deployment Packages are built into
+
+### Client-Side
+
+-   **Root Folder/Installation Folder –** Defaults to **%appdata%\\DQAESM also**
+    holds all executable scripts and configuration files
+
+-   **/Templates** - Location to place downloaded Email Signature Client
+    Deployment Packages
 
 Installation
 ------------
+
+### Requirements
+
+-   Web Server accessible by end users for hosting of Client Deployment Packages
+
+-   Azure Active Directory
+
+-   Azure Active Directory App Registration with Microsoft Graph Permissions to
+    allow solution scripts to read the necessary user profile information
+
+-   Microsoft Intune
+
+-   Windows 10
+
+-   Microsoft Outlook 2013 and above
 
 ### Hosting
 
@@ -128,7 +189,7 @@ As an Azure AD administrator from the Azure Portal (https://portal.azure.com):
             7.  **DQAPOSTCODE** – Azure AD Postal Code
 
 2.  Once you have created your email signatures in Outlook. Open File Explorer
-    to the following path %appdata%\\Microsoft\\Signatures
+    to the following path **%appdata%\\Microsoft\\Signatures**
 
 3.  Copy the files and folders with names that match the Email Signature
     templates you have just created to the Templates folder of this cloned
@@ -175,3 +236,20 @@ As an Azure AD administrator from the Azure Portal (https://portal.azure.com):
         **yes**
 
     7.  Assign a deployment group
+
+Updating the Configuration/Script Package
+-----------------------------------------
+
+1.  Follow the instructions for **generating solution configuration** and/or
+    make any required changes to solution scripts
+
+2.  Follow Steps **1** and **2** and **5** from the **Create Deployment
+    Packages** instructions
+
+Updating the Email Templates Package
+------------------------------------
+
+1.  Follow the instructions for **Create Outlook Signature Templates**
+
+2.  Follow Steps **3** and **4** and **5** from the **Create Deployment
+    Packages** instructions
