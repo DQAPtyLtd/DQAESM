@@ -130,7 +130,7 @@ As an Azure AD administrator from the Azure Portal (https://portal.azure.com):
     **Microsoft Graph** the necessary user profile attributes eg.
     **User.Read.All**
 
--   Create and take note of the client secret for this App Registration
+-   Create and take note of the **client secret** for this App Registration
 
 -   Also take not of the **Directory ID** under your Azure AD instance (under
     Properties blade)
