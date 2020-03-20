@@ -5,7 +5,7 @@
 
 .DESCRIPTION
 
-  Installs the DQA ESM Program (designed to be deployed via intune run in the end users context not as system)
+  Installs the DQA ESM Program
 
   1. Creates "$env:userprofile\AppData\Roaming\DQAESM" Directory
   2. Downloads DQA ESM Package from Confgured URL
@@ -39,7 +39,7 @@ $ScheduledESMSignatureTaskName = "DQAESM-Signature-Updater"
 $ScheduledESMSignatureTaskDescription = "DQA Email Signature Manager (Signature Block Template Management)"
 
 #Scheduler Interval (minutes)
-$ScheduledInterval = 300
+$ScheduledInterval = 60
 
 #Installation Path
 $destinationFolder = "$env:userprofile\AppData\Roaming\DQAESM"
@@ -47,8 +47,8 @@ $destinationFolder = "$env:userprofile\AppData\Roaming\DQAESM"
 #Download Locations
 $DQAESMPackageName = "DQAESM"
 
-$DQAESMPackage = "https://sampleurl.com/esm/$DQAESMPackageName.zip"
-$DQAESMPackageMD5 = "https://sampleurl.com/esm/$DQAESMPackageName.md5"
+$DQAESMPackage = "https://sample.com/esm/$DQAESMPackageName.zip"
+$DQAESMPackageMD5 = "https://sample.com/esm/$DQAESMPackageName.md5"
 
 
 ###########################
@@ -113,14 +113,14 @@ If ($scheduledTask) {
 # Register the New Scheduled Tasks
 try {
     Write-Output "Installing DQA Email Signature Updater Scheduled Tasks."
-    $scriptpath = "$destinationFolder\Update-DQAESM.ps1"
+    $scriptpath = "$destinationFolder\run-dqaesmupdate.vbs"
     $scriptWorkingDir = "$destinationFolder"
     $trigger = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Minutes $ScheduledInterval) -once -At (Get-Date) -RandomDelay (New-TimeSpan -Minutes 2)
-    $action = New-ScheduledTaskAction -Execute 'Powershell.exe' -WorkingDirectory $scriptWorkingDir -Argument "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass `"$scriptpath`""
+    $action = New-ScheduledTaskAction -Execute 'wscript.exe' -WorkingDirectory $scriptWorkingDir -Argument "//nologo `"$scriptpath`""
     $settings = New-ScheduledTaskSettingsSet -RunOnlyIfNetworkAvailable -AllowStartIfOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 10) -Hidden -Compatibility Win8
     $null = Register-ScheduledTask -taskname $ScheduledESMTaskName -Action $action -Settings $settings -Trigger $trigger -Description $ScheduledESMTaskDescription
-    $scriptpath = "$destinationFolder\Sync-DQAESMSignature.ps1"
-    $action = New-ScheduledTaskAction -Execute 'Powershell.exe' -WorkingDirectory $scriptWorkingDir -Argument "-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass `"$scriptpath`""
+    $scriptpath = "$destinationFolder\run-dqaesmsigupdate.vbs"
+    $action = New-ScheduledTaskAction -Execute 'wscript.exe' -WorkingDirectory $scriptWorkingDir -Argument "//nologo `"$scriptpath`""
     $null = Register-ScheduledTask -taskname $ScheduledESMSignatureTaskName -Action $action -Settings $settings -Trigger $trigger -Description $ScheduledESMSignatureTaskDescription
 
 }

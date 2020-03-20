@@ -24,6 +24,12 @@ Solution Files and Purpose
     packaged into DQAESM.zip that is configured as a scheduled task to manage
     updates to the users email signature block
 
+-   **run-dqaesmupdate.vbs** – VBScript wrapper that executes the
+    Update-DQAESM.ps1 powershell script so that it doesnt popup interactively
+
+-   **run-dqaesmsigupdate.vbs** – VBScript wrapper that executes the
+    Sync-DQAESMSignature.ps1 powershell script so that it doesnt popup interactively
+
 -   **Deploy-DQAESM.ps1** – PowerShell script designed to be deployed via Intune
     that installs the DQA ESM solution (designed to be in the end-user’s context
     not as system)

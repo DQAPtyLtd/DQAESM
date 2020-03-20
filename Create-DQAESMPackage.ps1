@@ -46,7 +46,7 @@ $ESMPackage = $ESMPackage[0] + ".zip"
 ###########################
 
 #Create Script Package
-Compress-Archive -LiteralPath "$PSScriptRoot\Update-DQAESM.ps1", "$PSScriptRoot\Sync-DQAESMSignature.ps1", "$PSScriptRoot\DQAESM.config" -DestinationPath "$PSScriptRoot\Packages\$ESMPackage" -Force
+Compress-Archive -LiteralPath "$PSScriptRoot\Update-DQAESM.ps1", "$PSScriptRoot\Sync-DQAESMSignature.ps1", "$PSScriptRoot\DQAESM.config", "$PSScriptRoot\run-dqaesmupdate.vbs", "$PSScriptRoot\run-dqaesmsigupdate.vbs" -DestinationPath "$PSScriptRoot\Packages\$ESMPackage" -Force
 
 #Create MD5 Hash of Archive
 $FileHash = Get-FileHash -Path "$PSScriptRoot\Packages\$ESMPackage"
