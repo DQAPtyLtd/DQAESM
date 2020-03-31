@@ -81,8 +81,8 @@ if (-not(test-path $destinationFolder)) {
 
 # Download DQA ESM Script Package
 
-   Invoke-WebRequest -Method GET -Uri $DQAESMPackageMD5 -OutFile "$destinationFolder\$DQAESMPackageName.md5"
-   Invoke-WebRequest -Method GET -Uri $DQAESMPackage -OutFile "$destinationFolder\$DQAESMPackageName.zip"
+   Invoke-WebRequest -Method GET -Uri $DQAESMPackageMD5 -OutFile "$destinationFolder\$DQAESMPackageName.md5" -UseBasicParsing
+   Invoke-WebRequest -Method GET -Uri $DQAESMPackage -OutFile "$destinationFolder\$DQAESMPackageName.zip" -UseBasicParsing
 
 # Unzip DQA ESM Script Package
 

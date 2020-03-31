@@ -78,8 +78,8 @@ $CheckMD5 = Test-Path -Path $localScriptPackMD5
 ### Clean installation of Script Pack (No previous download)
 If ($CheckMD5 -eq $false) {
 
-   Invoke-WebRequest -Method GET -Uri $ESMPackageMD5URL -OutFile $localScriptPackMD5
-   Invoke-WebRequest -Method GET -Uri $ESMPackageURL -OutFile $localScriptPack
+   Invoke-WebRequest -Method GET -Uri $ESMPackageMD5URL -OutFile $localScriptPackMD5 -UseBasicParsing
+   Invoke-WebRequest -Method GET -Uri $ESMPackageURL -OutFile $localScriptPack -UseBasicParsing
 
    ###Set Flag to let script know to clear previous Outlook Email Signature from User Profile before unpacking new ESM Script pack
    $UpdateESMPackage = $true
@@ -89,7 +89,7 @@ If ($CheckMD5 -eq $false) {
    ###Collect and store local Script pack MD5 hash variable
    $localScriptPackMD5Hash = Get-Content -Raw -Path $localScriptPackMD5
    ###Collect and store remote Script pack MD5 hash variable
-   $remoteScriptPackMD5Hash = Invoke-WebRequest -Method GET -Uri $ESMPackageMD5URL
+   $remoteScriptPackMD5Hash = Invoke-WebRequest -Method GET -Uri $ESMPackageMD5URL -UseBasicParsing
 
    ###Compare Hash Values if different overwrite local MD5 and Script Pack ZIP file otherwise do nothing
    $remoteScriptPackMD5Hash = [string]$remoteScriptPackMD5Hash
@@ -97,8 +97,8 @@ If ($CheckMD5 -eq $false) {
             {
                Write-Output "Downloading Latest ESM Script Package and MD5 Hash"
                #Download Latest Script Package MD5 and ZIP files
-               Invoke-WebRequest -Method GET -Uri $ESMPackageMD5URL -OutFile $localScriptPackMD5
-               Invoke-WebRequest -Method GET -Uri $ESMPackageURL -OutFile $localScriptPack
+               Invoke-WebRequest -Method GET -Uri $ESMPackageMD5URL -OutFile $localScriptPackMD5 -UseBasicParsing
+               Invoke-WebRequest -Method GET -Uri $ESMPackageURL -OutFile $localScriptPack -UseBasicParsing
 
                #Set Flag to let script know to clear previous Outlook Email Signature from User Profile before unpacking new ESM Script pack
                $UpdateESMPackage = $true

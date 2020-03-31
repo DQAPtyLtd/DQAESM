@@ -154,7 +154,7 @@ function Get-UserProfileInfo {
    $method = "GET"
 
    # Run Graph API query
-   $query = Invoke-WebRequest -Method $method -Uri $userInfoUri -ContentType "application/json" -Headers @{Authorization = "Bearer $token"} -ErrorAction Stop
+   $query = Invoke-WebRequest -Method $method -Uri $userInfoUri -ContentType "application/json" -Headers @{Authorization = "Bearer $token"} -UseBasicParsing -ErrorAction Stop
    $FunctionReturn = ($query.Content | ConvertFrom-Json)
 
    #Return Collected Information
@@ -255,8 +255,8 @@ $CheckMD5 = Test-Path -Path $localTemplatePackMD5
 ### Clean installation of Template Pack (No previous download)
 If ($CheckMD5 -eq $false) {
 
-   Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageMD5URL -OutFile $localTemplatePackMD5
-   Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageURL -OutFile $localTemplatePack
+   Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageMD5URL -OutFile $localTemplatePackMD5 -UseBasicParsing
+   Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageURL -OutFile $localTemplatePack -UseBasicParsing
 
    ###Set Flag to let script know to clear previous Outlook Email Signature from User Profile before unpacking new ESM Template pack
    $UpdateESMTemplate = $true
@@ -267,7 +267,7 @@ If ($CheckMD5 -eq $false) {
    $localTemplatePackMD5Hash = Get-Content -Raw -Path $localTemplatePackMD5
    ###Collect and store remote Template pack MD5 hash variable
    $remoteTemplatePackMD5Hash = $null
-   $remoteTemplatePackMD5Hash = Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageMD5URL
+   $remoteTemplatePackMD5Hash = Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageMD5URL -UseBasicParsing
 
    ###Compare Hash Values if different overwrite local MD5 and Template Pack ZIP file otherwise do nothing
    $remoteTemplatePackMD5Hash = [string]$remoteTemplatePackMD5Hash
@@ -275,8 +275,8 @@ If ($CheckMD5 -eq $false) {
             {
                Write-Output "Downloading Latest ESM Template Package and MD5 Hash"
                #Download Latest Template Package MD5 and ZIP files
-               Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageMD5URL -OutFile $localTemplatePackMD5
-               Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageURL -OutFile $localTemplatePack
+               Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageMD5URL -OutFile $localTemplatePackMD5 -UseBasicParsing
+               Invoke-WebRequest -Method GET -Uri $ESMTemplatePackageURL -OutFile $localTemplatePack -UseBasicParsing
 
                #Set Flag to let script know to clear previous Outlook Email Signature from User Profile before unpacking new ESM Template pack
                $UpdateESMTemplate = $true
